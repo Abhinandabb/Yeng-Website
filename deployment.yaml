@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: yeng-website
-        image: yeng-website:latest
+        image: abhinandabb/yeng-website:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
