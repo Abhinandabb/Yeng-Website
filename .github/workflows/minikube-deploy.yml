@@ -1,0 +1,34 @@
+name: Deploy Yeng Website to Minikube
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Minikube Docker daemon
+        shell: bash
+        run: |
+          eval $(minikube docker-env)
+          docker version
+
+      - name: Build Docker image
+        run: |
+          docker build -t yeng-website:latest .
+
+      - name: Deploy to Minikube
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+
+      - name: Verify deployment
+        run: |
+          kubectl get pods
+          kubectl get svc
