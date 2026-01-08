@@ -58,7 +58,7 @@ jobs:
       - name: Start Minikube
         shell: cmd
         run: |
-          minikube start --driver=docker
+          minikube start --driver=docker --cpus=4 --memory=4096
 
       - name: Configure Minikube Docker daemon
         shell: cmd
