@@ -1,3 +1,5 @@
+
+
 # name: Deploy Yeng Website to Minikube
 
 # on:
@@ -13,25 +15,47 @@
 #       - name: Checkout repository
 #         uses: actions/checkout@v4
 
-#       - name: Use Minikube Docker daemon
-#         shell: bash
+#       - name: Verify tools
+#         shell: cmd
 #         run: |
-#           eval $(minikube docker-env)
+#           kubectl version --client
+#           minikube version
 #           docker version
 
+#       - name: Start Minikube
+#         shell: cmd
+#         run: |
+#           minikube start --driver=docker --cpus=4 --memory=4096
+
+#       - name: Configure Minikube Docker daemon
+#         shell: cmd
+#         run: |
+#           FOR /F "tokens=*" %%i IN ('minikube docker-env --shell cmd') DO %%i
+
 #       - name: Build Docker image
+#         shell: cmd
 #         run: |
 #           docker build -t yeng-website:latest .
 
-#       - name: Deploy to Minikube
+#       - name: Use Minikube context
+#         shell: cmd
 #         run: |
-#           kubectl apply -f k8s/deployment.yaml
-#           kubectl apply -f k8s/service.yaml
+#           kubectl config use-context minikube
+
+#       - name: Deploy to Minikube
+#         shell: cmd
+#         run: |
+#           kubectl apply -f deployment.yaml
+#           kubectl apply -f services.yaml
 
 #       - name: Verify deployment
+#         shell: cmd
 #         run: |
 #           kubectl get pods
-#           kubectl get svc
+#           kubectl get services
+#           docker images
+
+
 
 name: Deploy Yeng Website to Minikube
 
@@ -52,13 +76,13 @@ jobs:
         shell: cmd
         run: |
           kubectl version --client
-          minikube version
+          minikube status
           docker version
 
-      - name: Start Minikube
+      - name: Ensure Minikube is running
         shell: cmd
         run: |
-          minikube start --driver=docker --cpus=4 --memory=4096
+          minikube status || minikube start --driver=docker
 
       - name: Configure Minikube Docker daemon
         shell: cmd
@@ -70,14 +94,10 @@ jobs:
         run: |
           docker build -t yeng-website:latest .
 
-      - name: Use Minikube context
-        shell: cmd
-        run: |
-          kubectl config use-context minikube
-
       - name: Deploy to Minikube
         shell: cmd
         run: |
+          kubectl config use-context minikube
           kubectl apply -f deployment.yaml
           kubectl apply -f services.yaml
 
@@ -86,4 +106,3 @@ jobs:
         run: |
           kubectl get pods
           kubectl get services
-          docker images
