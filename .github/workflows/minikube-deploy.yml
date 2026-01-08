@@ -3,7 +3,7 @@ name: Deploy Yeng Website to Minikube
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
