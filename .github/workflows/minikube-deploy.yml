@@ -68,8 +68,8 @@ jobs:
       - name: Deploy to Minikube
         shell: cmd
         run: |
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/services.yaml
+          kubectl apply -f deployment.yaml
+          kubectl apply -f services.yaml
 
       - name: Verify deployment
         shell: cmd
