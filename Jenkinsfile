@@ -41,10 +41,17 @@ pipeline {
 
         stage('Push Image') {
             steps {
-                sh '''
-                    docker tag yeng-website:latest abhinandabb/yeng-website:latest
-                    docker push abhinandabb/yeng-website:latest
-                '''
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker tag yeng-website:latest abhinandabb/yeng-website:latest
+                        docker push abhinandabb/yeng-website:latest
+                    '''
+                }
             }
         }
 
@@ -58,4 +65,3 @@ pipeline {
         }
     }
 }
-
