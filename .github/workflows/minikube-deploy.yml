@@ -1,61 +1,5 @@
 
 
-# name: Deploy Yeng Website to Minikube
-
-# on:
-#   push:
-#     branches:
-#       - master
-
-# jobs:
-#   deploy:
-#     runs-on: self-hosted
-
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v4
-
-#       - name: Verify tools
-#         shell: cmd
-#         run: |
-#           kubectl version --client
-#           minikube version
-#           docker version
-
-#       - name: Start Minikube
-#         shell: cmd
-#         run: |
-#           minikube start --driver=docker --cpus=4 --memory=4096
-
-#       - name: Configure Minikube Docker daemon
-#         shell: cmd
-#         run: |
-#           FOR /F "tokens=*" %%i IN ('minikube docker-env --shell cmd') DO %%i
-
-#       - name: Build Docker image
-#         shell: cmd
-#         run: |
-#           docker build -t yeng-website:latest .
-
-#       - name: Use Minikube context
-#         shell: cmd
-#         run: |
-#           kubectl config use-context minikube
-
-#       - name: Deploy to Minikube
-#         shell: cmd
-#         run: |
-#           kubectl apply -f deployment.yaml
-#           kubectl apply -f services.yaml
-
-#       - name: Verify deployment
-#         shell: cmd
-#         run: |
-#           kubectl get pods
-#           kubectl get services
-#           docker images
-
-
 name: Deploy Yeng Website to Minikube
 
 on:
@@ -75,15 +19,15 @@ jobs:
         shell: cmd
         run: |
           kubectl version --client
-          minikube status
+          minikube version
           docker version
 
-      - name: Ensure Minikube is running
+      - name: Start Minikube
         shell: cmd
         run: |
-          minikube status || minikube start --driver=docker
+          minikube start --driver=docker --cpus=4 --memory=4096
 
-      - name: Configure Docker to use Minikube
+      - name: Configure Minikube Docker daemon
         shell: cmd
         run: |
           FOR /F "tokens=*" %%i IN ('minikube docker-env --shell cmd') DO %%i
@@ -93,15 +37,71 @@ jobs:
         run: |
           docker build -t yeng-website:latest .
 
-      - name: Deploy to Minikube
+      - name: Use Minikube context
         shell: cmd
         run: |
           kubectl config use-context minikube
-          kubectl apply -f deployment.yaml --validate=false
-          kubectl apply -f services.yaml --validate=false
+
+      - name: Deploy to Minikube
+        shell: cmd
+        run: |
+          kubectl apply -f deployment.yaml
+          kubectl apply -f services.yaml
 
       - name: Verify deployment
         shell: cmd
         run: |
           kubectl get pods
-          kubectl get svc
+          kubectl get services
+          docker images
+
+
+# name: Deploy Yeng Website to Minikube
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+# jobs:
+#   deploy:
+#     runs-on: self-hosted
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+
+#       - name: Verify tools
+#         shell: cmd
+#         run: |
+#           kubectl version --client
+#           minikube status
+#           docker version
+
+#       - name: Ensure Minikube is running
+#         shell: cmd
+#         run: |
+#           minikube status || minikube start --driver=docker
+
+#       - name: Configure Docker to use Minikube
+#         shell: cmd
+#         run: |
+#           FOR /F "tokens=*" %%i IN ('minikube docker-env --shell cmd') DO %%i
+
+#       - name: Build Docker image
+#         shell: cmd
+#         run: |
+#           docker build -t yeng-website:latest .
+
+#       - name: Deploy to Minikube
+#         shell: cmd
+#         run: |
+#           kubectl config use-context minikube
+#           kubectl apply -f deployment.yaml --validate=false
+#           kubectl apply -f services.yaml --validate=false
+
+#       - name: Verify deployment
+#         shell: cmd
+#         run: |
+#           kubectl get pods
+#           kubectl get svc
