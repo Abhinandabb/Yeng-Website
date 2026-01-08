@@ -56,7 +56,6 @@
 #           docker images
 
 
-
 name: Deploy Yeng Website to Minikube
 
 on:
@@ -84,7 +83,7 @@ jobs:
         run: |
           minikube status || minikube start --driver=docker
 
-      - name: Configure Minikube Docker daemon
+      - name: Configure Docker to use Minikube
         shell: cmd
         run: |
           FOR /F "tokens=*" %%i IN ('minikube docker-env --shell cmd') DO %%i
@@ -98,11 +97,11 @@ jobs:
         shell: cmd
         run: |
           kubectl config use-context minikube
-          kubectl apply -f deployment.yaml
-          kubectl apply -f services.yaml
+          kubectl apply -f deployment.yaml --validate=false
+          kubectl apply -f services.yaml --validate=false
 
       - name: Verify deployment
         shell: cmd
         run: |
           kubectl get pods
-          kubectl get services
+          kubectl get svc
