@@ -50,24 +50,24 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Verify tools
-        shell: cmd
+        shell: powershell
         run: |
           kubectl version --client
           minikube status
           docker version
 
       - name: Configure Minikube Docker daemon
-        shell: cmd
+        shell: powershell
         run: |
           minikube docker-env --shell powershell | Invoke-Expression
 
       - name: Build Docker image
-        shell: cmd
+        shell: powershell
         run: |
           docker build -t yeng-website:latest .
 
       - name: Deploy to Minikube
-        shell: cmd
+        shell: powershell
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/services.yaml
