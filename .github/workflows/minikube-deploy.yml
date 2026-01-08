@@ -1,3 +1,42 @@
+# name: Deploy Yeng Website to Minikube
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+# jobs:
+#   deploy:
+#     runs-on: self-hosted
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+
+#       - name: Use Minikube Docker daemon
+#         shell: bash
+#         run: |
+#           eval $(minikube docker-env)
+#           docker version
+
+#       - name: Build Docker image
+#         run: |
+#           docker build -t yeng-website:latest .
+
+#       - name: Deploy to Minikube
+#         run: |
+#           kubectl apply -f k8s/deployment.yaml
+#           kubectl apply -f k8s/service.yaml
+
+#       - name: Verify deployment
+#         run: |
+#           kubectl get pods
+#           kubectl get svc
+
+
+
+
+
 name: Deploy Yeng Website to Minikube
 
 on:
@@ -13,22 +52,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Minikube Docker daemon
-        shell: bash
+      - name: Verify tools
+        shell: powershell
         run: |
-          eval $(minikube docker-env)
+          kubectl version --client
+          minikube status
           docker version
 
+      - name: Configure Minikube Docker daemon
+        shell: powershell
+        run: |
+          minikube docker-env --shell powershell | Invoke-Expression
+
       - name: Build Docker image
+        shell: powershell
         run: |
           docker build -t yeng-website:latest .
 
       - name: Deploy to Minikube
+        shell: powershell
         run: |
           kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
+          kubectl apply -f k8s/services.yaml
 
       - name: Verify deployment
+        shell: powershell
         run: |
           kubectl get pods
           kubectl get svc
