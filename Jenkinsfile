@@ -22,7 +22,6 @@
 //     }
 // }
 
-
 pipeline {
     agent any
 
@@ -48,8 +47,8 @@ pipeline {
                 )]) {
                     sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker tag yeng-website:latest abhinandabb/yeng-website:latest
-                        docker push abhinandabb/yeng-website:latest
+                        docker tag yeng-website:latest $DOCKER_USER/abhinand121-yeng-website:latest
+                        docker push $DOCKER_USER/abhinand121-yeng-website:latest
                     '''
                 }
             }
