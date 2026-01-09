@@ -1,3 +1,25 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: yeng-website
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: yeng-website
+#   template:
+#     metadata:
+#       labels:
+#         app: yeng-website
+#     spec:
+#       containers:
+#       - name: yeng-website
+#         image: abhinandabb/yeng-website:latest
+#         imagePullPolicy: IfNotPresent
+#         ports:
+#         - containerPort: 80
+
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,7 +36,8 @@ spec:
     spec:
       containers:
       - name: yeng-website
-        image: abhinandabb/yeng-website:latest
-        imagePullPolicy: IfNotPresent
+        image: yeng-website:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 80
+
